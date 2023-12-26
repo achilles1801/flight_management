@@ -1,19 +1,16 @@
 import express from 'express';
-import pool from './database.js';
+import bodyParser from 'body-parser';
+
+import airline from './routes/airline.js';
 
 
 const app = express();
 const PORT = 3000;
 
+app.use(bodyParser.json());
 
-app.get('/test', (req, res) => {
-    pool.query('SELECT 1 + 1 AS solution', (error, results) => {
-        if (error) {
-            return res.status(500).json({ error: error.message });
-        }
-        res.status(200).json({ solution: results[0].solution });
-    });
-});
+
+app.use('/', airline);
 
 
 app.listen(PORT, () => {
