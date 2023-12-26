@@ -2,6 +2,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import airline from './routes/airline.js';
+import location from './routes/location.js';
+import airplane from './routes/airplane.js';
 
 
 const app = express();
@@ -10,7 +12,7 @@ const PORT = 3000;
 app.use(bodyParser.json());
 
 
-app.use('/', airline);
+app.use('/', airline, location, airplane);
 
 
 app.listen(PORT, () => {
