@@ -12,6 +12,8 @@ import leg from './routes/leg.js';
 import route from './routes/route.js';
 import route_path from './routes/route_path.js';
 import flight from './routes/flight.js';
+import pilot from  './routes/pilot.js';
+import pilot_licenses from './routes/pilot_licenses.js';
 
 const app = express();
 const PORT = 3000;
@@ -29,7 +31,9 @@ app.use('/',
   leg,
   route,
   route_path,
-  flight
+  flight,
+  pilot,
+  pilot_licenses
   );
 
 
