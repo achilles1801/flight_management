@@ -1,5 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import { graphqlHTTP } from 'express-graphql';
+import schema from './graphql/schema.js';
 
 import airline from './routes/airline.js';
 import location from './routes/location.js';
@@ -20,7 +22,6 @@ const PORT = 3000;
 
 app.use(bodyParser.json());
 
-
 app.use('/',
   airline,
   location,
@@ -36,7 +37,12 @@ app.use('/',
   pilot_licenses
   );
 
-
+  
+// Set up GraphQL endpoint
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  graphiql: true, // Set to false in production
+}));
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
   });
