@@ -23,10 +23,6 @@ export const AirlineQuery = {
   // ...other queries
 };
 
-const checkIfAuthorized = (user) => {
-  return user && user.role === 'admin';
-};
-
 export const AirlineMutation = {
   addAirline: {
     type: AirlineType,
@@ -34,10 +30,11 @@ export const AirlineMutation = {
       airlineID: { type: GraphQLString },
       revenue: { type: GraphQLInt }
     },
-    resolve(parent, args, context) {
-      // Check if user is authorized
-      if (!checkIfAuthorized(context.user)) {
-        throw new Error('Not authorized!');
+    resolve(parent, args, {userRoles}) {
+      // Check if the user has the 'admin' role
+      console.log(userRoles);
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
       }
       return new Promise((resolve, reject) => {
         db.query('INSERT INTO airline (airlineID, revenue) VALUES (?, ?)', 
