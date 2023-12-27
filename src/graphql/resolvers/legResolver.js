@@ -45,7 +45,10 @@ export const LegMutation = {
       departure: { type: new GraphQLNonNull(GraphQLString) },
       arrival: { type: new GraphQLNonNull(GraphQLString) }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         const { legID, distance, departure, arrival } = args;
         db.query('INSERT INTO leg (legID, distance, departure, arrival) VALUES (?, ?, ?, ?)',
@@ -68,7 +71,10 @@ export const LegMutation = {
         departure: { type: GraphQLString },
         arrival: { type: GraphQLString }
         },
-        resolve(parent, args) {
+        resolve(parent, args, {userRoles}) {
+          if (!userRoles.includes('Admin') || userRoles.length === 0) {
+            throw new Error('You are not authorized to do this action');
+          }
         const { legID, distance, departure, arrival } = args;
         const updateFields = {};
         if (distance !== undefined) updateFields.distance = distance;
@@ -98,7 +104,10 @@ export const LegMutation = {
     args: {
       legID: { type: new GraphQLNonNull(GraphQLString) }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('DELETE FROM leg WHERE legID = ?', [args.legID], (error, results) => {
           if (error) {

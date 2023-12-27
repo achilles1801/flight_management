@@ -43,7 +43,10 @@ export const PilotLicenseMutation = {
       personID: { type: new GraphQLNonNull(GraphQLString) },
       license: { type: new GraphQLNonNull(GraphQLString) }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('INSERT INTO pilot_licenses (personID, license) VALUES (?, ?)', [args.personID, args.license], (error) => {
           if (error) {
@@ -63,7 +66,10 @@ updatePilotLicense: {
       license: { type: new GraphQLNonNull(GraphQLString) }
       // Add other fields as needed
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       const { personID, license, ...updateFields } = args;
   
       const updateQuery = Object.entries(updateFields)
@@ -90,7 +96,10 @@ updatePilotLicense: {
       personID: { type: new GraphQLNonNull(GraphQLString) },
       license: { type: GraphQLString }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('DELETE FROM pilot_licenses WHERE personID = ? AND license = ?', [args.personID, args.license], (error) => {
           if (error) {

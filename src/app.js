@@ -3,10 +3,8 @@ import bodyParser from 'body-parser';
 import { graphqlHTTP } from 'express-graphql';
 import schema from './graphql/schema.js';
 import pkg from 'express-openid-connect';
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import axios from 'axios';
-import jwksRsa from 'jwks-rsa';
+
 
 
 import airline from './routes/airline.js';
@@ -44,6 +42,7 @@ const config = {
   app.use(auth(config));
 
   app.use((req, res, next) => {
+    console.log(req.oidc.user)
     const roles = req.oidc.user['https://my-app.example.com/roles'];
     req.userRoles = roles || [];
     next();

@@ -44,7 +44,10 @@ export const PassengerMutation = {
       miles: { type: GraphQLInt },
       funds: { type: GraphQLInt }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('INSERT INTO passenger (personID, miles, funds) VALUES (?, ?, ?)',
           [args.personID, args.miles, args.funds], 
@@ -68,7 +71,10 @@ export const PassengerMutation = {
       miles: { type: GraphQLInt },
       funds: { type: GraphQLInt }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       const { personID, ...updateValues } = args;
       const fields = Object.keys(updateValues).filter(key => updateValues[key] != null);
       const values = fields.map(key => updateValues[key]);
@@ -98,7 +104,10 @@ export const PassengerMutation = {
     args: {
       personID: { type: new GraphQLNonNull(GraphQLString) }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('DELETE FROM passenger WHERE personID = ?', [args.personID], (error) => {
           if (error) {

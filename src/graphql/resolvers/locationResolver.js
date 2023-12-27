@@ -42,7 +42,10 @@ export const LocationMutation = {
           locationID: { type: new GraphQLNonNull(GraphQLString) }
           // Include other fields if necessary
         },
-        resolve(parent, args) {
+        resolve(parent, args, {userRoles}) {
+          if (!userRoles.includes('Admin') || userRoles.length === 0) {
+            throw new Error('You are not authorized to do this action');
+          }
           return new Promise((resolve, reject) => {
             db.query('INSERT INTO location (locationID) VALUES (?)', 
                      [args.locationID], (error, results) => {
@@ -70,7 +73,10 @@ export const LocationMutation = {
       locationID: { type: new GraphQLNonNull(GraphQLString) }
       // Add other arguments if needed
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       const { locationID, ...updateValues } = args;
       // Prepare query for dynamic update
       const fields = Object.keys(updateValues).filter(key => updateValues[key] != null);
@@ -100,7 +106,10 @@ export const LocationMutation = {
     args: {
       locationID: { type: new GraphQLNonNull(GraphQLString) }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('DELETE FROM location WHERE locationID = ?', [args.locationID], (error, results) => {
           if (error) {

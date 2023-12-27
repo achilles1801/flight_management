@@ -41,7 +41,10 @@ export const RoutePathMutation = {
       legID: { type: new GraphQLNonNull(GraphQLString) },
       sequence: { type: new GraphQLNonNull(GraphQLInt) },
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('INSERT INTO route_path (routeID, legID, sequence) VALUES (?, ?, ?)', 
                  [args.routeID, args.legID, args.sequence], (error, results) => {
@@ -61,7 +64,10 @@ export const RoutePathMutation = {
       legID: { type: GraphQLString },
       newSequence: { type: GraphQLInt },
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('UPDATE route_path SET legID = ?, sequence = ? WHERE routeID = ? AND sequence = ?', 
                  [args.legID, args.newSequence, args.routeID, args.sequence], (error, results) => {
@@ -79,7 +85,10 @@ export const RoutePathMutation = {
       routeID: { type: new GraphQLNonNull(GraphQLString) },
       sequence: { type: new GraphQLNonNull(GraphQLInt) },
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('DELETE FROM route_path WHERE routeID = ? AND sequence = ?', 
                  [args.routeID, args.sequence], (error, results) => {

@@ -46,7 +46,10 @@ export const FlightMutation = {
         next_time: { type: GraphQLString }, // Adjust the type if needed
         cost: { type: GraphQLInt }
         },
-        resolve(parent, args) {
+        resolve(parent, args, {userRoles}) {
+          if (!userRoles.includes('Admin') || userRoles.length === 0) {
+            throw new Error('You are not authorized to do this action');
+          }
         return new Promise((resolve, reject) => {
             const { flightID, routeID, support_airline, support_tail, progress, airplane_status, next_time, cost } = args;
             db.query('INSERT INTO flight (flightID, routeID, support_airline, support_tail, progress, airplane_status, next_time, cost) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -72,7 +75,10 @@ export const FlightMutation = {
         next_time: { type: GraphQLString },
         cost: { type: GraphQLInt },
       },
-      resolve(parent, args) {
+      resolve(parent, args, {userRoles}) {
+        if (!userRoles.includes('Admin') || userRoles.length === 0) {
+          throw new Error('You are not authorized to do this action');
+        }
         const { flightID, ...updatedFields } = args;
         const updateQuery = Object.entries(updatedFields)
           .map(([field, value]) => (value !== undefined ? `${field} = ?` : null))
@@ -108,7 +114,10 @@ export const FlightMutation = {
       args: {
         flightID: { type: new GraphQLNonNull(GraphQLString) },
       },
-      resolve(parent, args) {
+      resolve(parent, args, {userRoles}) {
+        if (!userRoles.includes('Admin') || userRoles.length === 0) {
+          throw new Error('You are not authorized to do this action');
+        }
         const { flightID } = args;
   
         return new Promise((resolve, reject) => {

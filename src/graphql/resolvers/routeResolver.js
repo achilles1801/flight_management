@@ -42,7 +42,10 @@ export const RouteMutation = {
     args: {
       routeID: { type: new GraphQLNonNull(GraphQLString) }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('INSERT INTO route (routeID) VALUES (?)', [args.routeID], (error) => {
           if (error) {
@@ -61,7 +64,10 @@ updateRoute: {
       routeID: { type: new GraphQLNonNull(GraphQLString) },
       // Include other route fields here if needed
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       const { routeID, ...updateFields } = args;
   
       // Construct update query dynamically
@@ -88,7 +94,10 @@ updateRoute: {
     args: {
       routeID: { type: new GraphQLNonNull(GraphQLString) }
     },
-    resolve(parent, args) {
+    resolve(parent, args, {userRoles}) {
+      if (!userRoles.includes('Admin') || userRoles.length === 0) {
+        throw new Error('You are not authorized to do this action');
+      }
       return new Promise((resolve, reject) => {
         db.query('DELETE FROM route WHERE routeID = ?', [args.routeID], (error) => {
           if (error) {
