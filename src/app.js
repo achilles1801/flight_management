@@ -29,7 +29,7 @@ const app = express();
 const PORT = 3000;
 
 const config = {
-  authRequired: true,
+  authRequired: false,
   auth0Logout: true,
   secret: '2bedc5aea97d259add569ca27f66117183e8846742a53c24a763a231a204ce90',
   baseURL: 'http://localhost:3000',
@@ -43,8 +43,8 @@ const config = {
 
   app.use((req, res, next) => {
     console.log(req.oidc.user)
-    const roles = req.oidc.user['https://my-app.example.com/roles'];
-    req.userRoles = roles || [];
+    const roles = req.oidc.user ? req.oidc.user['https://my-app.example.com/roles'] : [];
+    req.userRoles = roles;
     next();
   });
 
@@ -53,7 +53,19 @@ const config = {
     res.send({ user, accessToken, idToken });
   });
 
-
+// Middleware to check if user is admin for certain requests
+function checkAdminForREST(req, res, next) {
+  const methods = ['POST', 'PUT', 'DELETE'];
+  if (methods.includes(req.method)) {
+    const roles = req.oidc.user ? req.oidc.user['https://my-app.example.com/roles'] : [];
+    if (!roles.includes('Admin')) {
+      res.status(403).json({ error: 'You are not authorized to do this action' });
+      return;
+    }
+  }
+  next();
+}
+app.use('/', checkAdminForREST);
 app.use('/',
   airline,
   location,
