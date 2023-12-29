@@ -4,7 +4,7 @@ import db from '../database.js';
 const router = express.Router();
 
 // GET all routes
-router.get('/routes', (req, res) => {
+router.get('/route', (req, res) => {
     db.query('SELECT * FROM route', (error, results) => {
         if (error) {
             console.error(error);
@@ -16,7 +16,7 @@ router.get('/routes', (req, res) => {
 });
 
 // GET a single route by ID
-router.get('/routes/:id', (req, res) => {
+router.get('/route/:id', (req, res) => {
     const { id } = req.params;
     db.query('SELECT * FROM route WHERE routeID = ?', [id], (error, results) => {
         if (error) {
@@ -29,7 +29,7 @@ router.get('/routes/:id', (req, res) => {
 });
 
 // POST a new route
-router.post('/routes', (req, res) => {
+router.post('/route', (req, res) => {
     const { routeID } = req.body;
     db.query('INSERT INTO route (routeID) VALUES (?)', [routeID], (error, results) => {
         if (error) {
@@ -42,7 +42,7 @@ router.post('/routes', (req, res) => {
 });
 
 // DELETE a route
-router.delete('/routes/:id', (req, res) => {
+router.delete('/route/:id', (req, res) => {
     const { id } = req.params;
     db.query('DELETE FROM route WHERE routeID = ?', [id], (error, results) => {
         if (error) {

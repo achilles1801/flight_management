@@ -1,0 +1,97 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+
+    .header {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+    }
+
+    .container {
+        padding: 20px;
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        align-items: center;
+        display: flex;
+        flex-direction: row; /* Align children horizontally */
+        justify-content: center; /* Center children horizontally */
+        flex-wrap: wrap;
+        
+    }
+
+    .button {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        margin: 10px; /* Add margin around buttons for spacing */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none; /* if using <a> tags */
+        transition: background-color 0.3s;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+    .text-center {
+        text-align: center;
+    }
+    #logoutButton {
+    background-color: red;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    display: inline-block;
+}
+.logout-container {
+        text-align: center; /* Center the logout button */
+        margin-top: 20px; /* Space above the logout button */
+    }
+
+#logoutButton:hover {
+    background-color: darkred;
+}
+</style>
+</head>
+<body>
+    <div class="header">
+        <h1>Flight Management Dashboard</h1>
+    </div>
+    <div class="container">
+        <a href="/endpoints" class="button">View Routes</a>
+        <a href="/graphql" class="button">Access GraphQL</a>
+        <!-- Add more buttons or content as needed -->
+    </div>
+    <div class = "logout-container">
+    <button id="logoutButton" onclick="window.location.href='/logout'">Logout</button>
+    </div>
+  <!-- <button onclick="window.location.href='/endpoints'">Routes</button>
+  <button onclick="window.location.href='/graphql'">GraphQL</button>
+  <button onclick="window.location.href='/logout'">Logout</button> -->
+</body>
+</html>

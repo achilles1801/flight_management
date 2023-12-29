@@ -4,7 +4,9 @@ import { graphqlHTTP } from 'express-graphql';
 import schema from './graphql/schema.js';
 import pkg from 'express-openid-connect';
 import dotenv from 'dotenv';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 
 import airline from './routes/airline.js';
@@ -22,35 +24,53 @@ import pilot from  './routes/pilot.js';
 import pilot_licenses from './routes/pilot_licenses.js';
 
 
-
-dotenv.config();
-
 const app = express();
+dotenv.config();
 const PORT = 3000;
+app.use(bodyParser.json());
 
-const config = {
+const { auth, requiresAuth } = pkg; // imports the auth and requiresAuth functions from the express-openid-connect library
+const config = { // defines a config object for the auth0 middleware
   authRequired: false,
   auth0Logout: true,
-  secret: '2bedc5aea97d259add569ca27f66117183e8846742a53c24a763a231a204ce90',
+  secret: process.env.SECRET,
   baseURL: 'http://localhost:3000',
-  clientID: 'xVHyHjLXkehoNDEDJ9a8jiIezgRJU7cU',
-  issuerBaseURL: 'https://dev-l38tsgz4skl46fcs.us.auth0.com'
+  clientID: 'fOzHylbT6bCz3R2MAFhMCwyANaPxyIrI',
+  issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
+
 };
+app.use(auth(config));
 
-  const { auth, requiresAuth } = pkg;
-  app.use(bodyParser.json());
-  app.use(auth(config));
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
 
+
+const __filename = fileURLToPath(import.meta.url); // import.meta.url gives the current file path (starts with file://), __filename is the same path without file://
+const __dirname = dirname(__filename); // __dirname is a function from the built-in path module in node that gives the directory name of a file path
+app.use(express.static(path.join(__dirname, 'public'))); // allows me to use the files in the public folder
+ // when a user visits the site, auth(config) is invoked, and since in my config i have authRequired set to true, the user will be redirected to the auth0 login page
+
+app.get('/', requiresAuth(), (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'home.html')); // Serve the dashboard page after login
+});
+app.use(express.static(path.join(__dirname, 'public'))); // allows me to use the files in the public folder
+
+app.get('/endpoints', requiresAuth(), (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'endpoints.html'));
+});
+
+app.get('/logout', (req, res) => {
+  req.oidc.logout({
+      returnTo: 'http://localhost:3000', // URL to redirect after logout
+  });
+});
+ 
   app.use((req, res, next) => {
-    console.log(req.oidc.user)
     const roles = req.oidc.user ? req.oidc.user['https://my-app.example.com/roles'] : [];
     req.userRoles = roles;
     next();
-  });
-
-  app.get('/profile', requiresAuth(), (req, res) => {
-    const { user, accessToken, idToken } = req.oidc;
-    res.send({ user, accessToken, idToken });
   });
 
 // Middleware to check if user is admin for certain requests

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Routes</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    h1 {
+        color: #2b2828;
+        text-align: center;
+        padding-bottom: 10px;
+        font-size: xx-large;
+
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        margin: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+    #returnButton {
+    background-color: red;
+    color: white;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+    #dataDisplay {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    h2 {
+            color: #555;
+            text-align: center;
+            font-size: larger; /* Adjust the font size as needed */
+            padding-top: 10px;
+        }
+</style>
+    <style>
+        #dataDisplay {
+            white-space: pre;
+            margin-top: 20px;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Database</h1>
+    <h2>Click to view</h2>
+    <button onclick="fetchData('/airplanes')">Airplanes</button>
+    <button onclick="fetchData('/locations')">Locations</button>
+    <button onclick="fetchData('/airports')">Airports</button>
+    <button onclick="fetchData('/persons')">Persons</button>
+    <button onclick="fetchData('/passengers')">Passengers</button>
+    <button onclick="fetchData('/passenger_vacations')">Passenger Vacations</button>
+    <button onclick="fetchData('/legs')">Legs</button>
+    <button onclick="fetchData('/route')">Routes</button>
+    <button onclick="fetchData('/route_paths')">Route Paths</button>
+    <button onclick="fetchData('/flights')">Flights</button>
+    <button onclick="fetchData('/pilots')">Pilots</button>
+    <button onclick="fetchData('/pilot_licenses')">Pilot Licenses</button>
+    <button id="returnButton" onclick="window.location.href='/'">Return to Dashboard</button>
+
+
+    <div id="dataDisplay"></div>
+
+    <script>
+        function fetchData(endpoint) {
+            fetch(endpoint)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('dataDisplay').innerHTML = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('dataDisplay').innerHTML = 'Error fetching data: ' + error.message;
+                });
+        }
+    </script>
+</body>
+</html>
