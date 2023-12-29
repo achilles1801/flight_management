@@ -35,7 +35,7 @@ const config = { // defines a config object for the auth0 middleware
   auth0Logout: true,
   secret: process.env.SECRET,
   baseURL: 'http://localhost:3000',
-  clientID: 'fOzHylbT6bCz3R2MAFhMCwyANaPxyIrI',
+  clientID: process.env.clientID,
   issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
 
 };
